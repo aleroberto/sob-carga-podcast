@@ -179,10 +179,28 @@
           <p class="form-copy">Pode ser uma arquitetura estranha, um problema de escala, uma decisão difícil ou uma situação real anonimizada. Casos enviados pela comunidade podem virar episódios futuros.</p>
         </div>
 
-        <form id="case-form" novalidate>
-          <label>Seu nome<input type="text" name="name" autocomplete="name" required></label>
-          <label>E-mail<input type="email" name="email" autocomplete="email" required></label>
-          <label>Conte o problema<textarea name="case" rows="6" required></textarea></label>
+        <form id="case-form"
+              action="https://formspree.io/f/xaeygqwk"
+              method="POST"
+              novalidate>
+          <input type="hidden" name="_subject" value="Novo caso enviado pelo site Sob Carga">
+          <input type="hidden" name="origem" value="Landing page Sob Carga">
+
+          <label>
+            Seu nome
+            <input type="text" name="name" autocomplete="name" required>
+          </label>
+
+          <label>
+            E-mail
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+
+          <label>
+            Conte o problema
+            <textarea name="case" rows="6" required></textarea>
+          </label>
+
           <button class="btn btn-primary btn-full" type="submit">Enviar caso</button>
           <p class="form-message" id="form-message" aria-live="polite"></p>
         </form>
@@ -193,7 +211,7 @@
   <footer class="site-footer">
     <div class="shell footer-inner">
       <div><div class="brand footer-brand">SOB <span>CARGA</span></div><p>Decisões reais de engenharia.</p></div>
-      <p>por Ale Roberto e Matheus Santana</p>
+      <p>por Matheus Santana e Ale Roberto</p>
     </div>
   </footer>
 
