@@ -180,29 +180,36 @@
         </div>
 
         <form id="case-form"
+              class="ajax-form"
+              data-success="Caso enviado com sucesso. Obrigado por colocar esse problema Sob Carga."
               action="https://formspree.io/f/xaeygqwk"
               method="POST"
               novalidate>
           <input type="hidden" name="_subject" value="Novo caso enviado pelo site Sob Carga">
           <input type="hidden" name="origem" value="Landing page Sob Carga">
 
-          <label>
-            Seu nome
-            <input type="text" name="name" autocomplete="name" required>
-          </label>
+          <div class="hp-field" aria-hidden="true">
+            <label>Não preencha este campo
+              <input type="text" name="_gotcha" tabindex="-1" autocomplete="off">
+            </label>
+          </div>
 
-          <label>
-            E-mail
-            <input type="email" name="email" autocomplete="email" required>
-          </label>
+          <label>Seu nome<input type="text" name="name" autocomplete="name" required></label>
+          <label>E-mail<input type="email" name="email" autocomplete="email" required></label>
+          <label>Conte o problema<textarea name="case" rows="6" required></textarea></label>
 
-          <label>
-            Conte o problema
-            <textarea name="case" rows="6" required></textarea>
+          <label class="legal-check">
+            <input type="checkbox" name="aceite_termos" value="sim" required>
+            <span>
+              Li e concordo com os <a href="termos/" target="_blank" rel="noopener">Termos de Uso e Envio de Casos</a>
+              e com a <a href="privacidade/" target="_blank" rel="noopener">Política de Privacidade</a>.
+              Declaro que não estou enviando informações confidenciais, credenciais, segredos comerciais,
+              dados pessoais de terceiros ou conteúdo que eu não esteja autorizado a compartilhar.
+            </span>
           </label>
 
           <button class="btn btn-primary btn-full" type="submit">Enviar caso</button>
-          <p class="form-message" id="form-message" aria-live="polite"></p>
+          <p class="form-message" aria-live="polite"></p>
         </form>
       </div>
     </section>
@@ -210,8 +217,20 @@
 
   <footer class="site-footer">
     <div class="shell footer-inner">
-      <div><div class="brand footer-brand">SOB <span>CARGA</span></div><p>Decisões reais de engenharia.</p></div>
-      <p>por Ale Roberto e Matheus Sant'ana</p>
+      <div>
+        <div class="brand footer-brand">SOB <span>CARGA</span></div>
+        <p>Decisões reais de engenharia.</p>
+        <p class="copyright">© 2026 Sob Carga.</p>
+      </div>
+
+      <div class="footer-right">
+        <nav class="legal-links" aria-label="Links legais">
+          <a href="privacidade/">Privacidade</a>
+          <a href="termos/">Termos de Uso</a>
+          <a href="#enviar">Envie um caso</a>
+        </nav>
+        <p>por Ale Roberto e Matheus Sant'ana</p>
+      </div>
     </div>
   </footer>
 

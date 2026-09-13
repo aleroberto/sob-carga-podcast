@@ -16,80 +16,85 @@
     });
   }
 
-  const form = document.querySelector("#case-form");
-  const message = document.querySelector("#form-message");
+  document.querySelectorAll("form.ajax-form").forEach((form) => {
+    const message = form.querySelector(".form-message");
+    const submitButton = form.querySelector('button[type="submit"]');
 
-  if (!form || !message) return;
+    if (!message || !submitButton) return;
 
-  const submitButton = form.querySelector('button[type="submit"]');
-  const defaultButtonText = submitButton.textContent;
+    const defaultButtonText = submitButton.textContent;
+    const successMessage =
+      form.dataset.success || "Mensagem enviada com sucesso.";
 
-  function setMessage(text, type = "neutral") {
-    message.textContent = text;
-    if (type === "success") {
-      message.style.color = "#d8e6d4";
-    } else if (type === "error") {
-      message.style.color = "#f0a589";
-    } else {
-      message.style.color = "";
-    }
-  }
+    function setMessage(text, type = "neutral") {
+      message.textContent = text;
 
-  function setLoading(isLoading) {
-    submitButton.disabled = isLoading;
-    submitButton.textContent = isLoading ? "Enviando..." : defaultButtonText;
-    submitButton.style.opacity = isLoading ? "0.7" : "";
-    submitButton.style.cursor = isLoading ? "wait" : "";
-  }
-
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(form);
-    const name = String(formData.get("name") || "").trim();
-    const email = String(formData.get("email") || "").trim();
-    const caseText = String(formData.get("case") || "").trim();
-
-    if (!name || !email || !caseText) {
-      setMessage("Preencha os três campos para continuar.", "error");
-      return;
+      if (type === "success") {
+        message.style.color = "#d8e6d4";
+      } else if (type === "error") {
+        message.style.color = "#f0a589";
+      } else {
+        message.style.color = "";
+      }
     }
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-      setMessage("Informe um e-mail válido.", "error");
-      return;
+    function setLoading(isLoading) {
+      submitButton.disabled = isLoading;
+      submitButton.textContent = isLoading ? "Enviando..." : defaultButtonText;
+      submitButton.style.opacity = isLoading ? "0.7" : "";
+      submitButton.style.cursor = isLoading ? "wait" : "";
     }
 
-    setLoading(true);
-    setMessage("Enviando seu caso...");
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-    try {
-      const response = await fetch(form.action, {
-        method: form.method,
-        body: formData,
-        headers: { "Accept": "application/json" }
-      });
-
-      if (response.ok) {
-        form.reset();
-        setMessage("Caso enviado com sucesso. Obrigado por colocar esse problema Sob Carga.", "success");
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        setMessage("Revise os campos obrigatórios antes de enviar.", "error");
         return;
       }
 
-      let errorMessage = "Não foi possível enviar agora. Tente novamente em alguns instantes.";
-      try {
-        const data = await response.json();
-        if (Array.isArray(data.errors) && data.errors.length) {
-          errorMessage = data.errors.map((error) => error.message).filter(Boolean).join(" ");
-        }
-      } catch (_) {}
+      setLoading(true);
+      setMessage("Enviando...");
 
-      setMessage(errorMessage, "error");
-    } catch (_) {
-      setMessage("Falha de conexão. Verifique sua internet e tente novamente.", "error");
-    } finally {
-      setLoading(false);
-    }
+      try {
+        const response = await fetch(form.action, {
+          method: form.method || "POST",
+          body: new FormData(form),
+          headers: {
+            Accept: "application/json"
+          }
+        });
+
+        if (response.ok) {
+          form.reset();
+          setMessage(successMessage, "success");
+          return;
+        }
+
+        let errorMessage =
+          "Não foi possível enviar agora. Tente novamente em alguns instantes.";
+
+        try {
+          const data = await response.json();
+
+          if (Array.isArray(data.errors) && data.errors.length) {
+            errorMessage = data.errors
+              .map((error) => error.message)
+              .filter(Boolean)
+              .join(" ");
+          }
+        } catch (_) {}
+
+        setMessage(errorMessage, "error");
+      } catch (_) {
+        setMessage(
+          "Falha de conexão. Verifique sua internet e tente novamente.",
+          "error"
+        );
+      } finally {
+        setLoading(false);
+      }
+    });
   });
 })();
